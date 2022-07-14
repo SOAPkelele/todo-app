@@ -1,5 +1,6 @@
 import { Todo } from 'models/TodosProp'
-import { useEffect, useState } from 'preact/compat'
+import { useSnapshot } from 'valtio'
+import TaskStore from 'stores/TaskStore'
 import TodoList from 'components/TodoList'
 import classnames, {
   alignItems,
@@ -61,65 +62,34 @@ const container = classnames(
   fontFamily('font-mono')
 )
 
-const getTodos = () => {
-  return [
-    new Todo(1, 'learn Preact', true),
-    new Todo(2, 'make an awesome app', false),
-    new Todo(
-      3,
-      'make a Coffee app: build MVP, pitch to real businesses',
-      false
-    ),
-    new Todo(4, 'go gym', true),
-    new Todo(5, 'learn Node', true),
-    new Todo(6, 'pass exams', true),
-    new Todo(7, "take Borodutch's courses", true),
-    new Todo(8, 'a really long tedious boring difficult task', false),
-  ]
-}
+TaskStore.makePersistent() // where to call it?
 
 export default function () {
-  const [todos, setTodos] = useState<Todo[]>([])
-
-  useEffect(() => {
-    setTodos(getTodos())
-  }, [])
-
-  useEffect(() => {
-    console.log(todos)
-  }, [todos])
+  const { tasks } = useSnapshot(TaskStore)
 
   // need to annotate?
   const addTodo = (event: any) => {
     event.preventDefault()
     const form = event.target as HTMLFormElement
-    const text = form.todo.value
+    const text = form.todo.value as string
 
     text &&
-      setTodos((todos) => {
-        const newTodos = [...todos]
-        newTodos.push(new Todo(todos.length + 1, text, false))
-        return newTodos
-      })
+      TaskStore.tasks.push(new Todo(TaskStore.tasks.length + 1, text, false))
 
     form.reset()
   }
 
   const toggleTodo = (todoId: number) => {
-    setTodos((todos) => {
-      return todos.map((todo) => {
-        if (todo.id == todoId) {
-          return { ...todo, done: !todo.done }
-        }
-        return todo
-      })
+    TaskStore.tasks = TaskStore.tasks.map((task) => {
+      if (task.id == todoId) {
+        return { ...task, done: !task.done }
+      }
+      return task
     })
   }
 
   const removeTodo = (todoId: number) => {
-    setTodos((todos) => {
-      return todos.filter((todo) => todo.id !== todoId)
-    })
+    TaskStore.tasks = TaskStore.tasks.filter((task) => task.id !== todoId)
   }
 
   return (
@@ -130,13 +100,13 @@ export default function () {
       </form>
       <TodoList
         list_name="todo"
-        tasks={todos ? todos.filter((todo) => !todo.done) : []}
+        tasks={tasks ? tasks.filter((task) => !task.done) : []}
         toggleTodo={toggleTodo}
         removeTodo={removeTodo}
       />
       <TodoList
         list_name="complete"
-        tasks={todos ? todos.filter((todo) => todo.done) : []}
+        tasks={tasks ? tasks.filter((task) => task.done) : []}
         toggleTodo={toggleTodo}
         removeTodo={removeTodo}
       />
