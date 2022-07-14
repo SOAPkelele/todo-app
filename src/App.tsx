@@ -1,10 +1,10 @@
-import MainBlock from 'components/MainBlock'
 import Root from 'components/Root'
+import TodoApp from 'components/TodoApp'
 
 export default function () {
   return (
     <Root>
-      <MainBlock />
+      <TodoApp />
     </Root>
   )
 }
