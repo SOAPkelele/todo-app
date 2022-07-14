@@ -6,4 +6,4 @@ class TaskStore extends PersistableStore {
   tasks = getInitialTasks()
 }
 
-export default proxy(new TaskStore())
+export default proxy(new TaskStore()).makePersistent()

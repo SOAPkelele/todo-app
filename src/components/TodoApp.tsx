@@ -62,8 +62,6 @@ const container = classnames(
   fontFamily('font-mono')
 )
 
-TaskStore.makePersistent() // where to call it?
-
 export default function () {
   const { tasks } = useSnapshot(TaskStore)
 
