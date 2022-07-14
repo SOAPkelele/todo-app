@@ -1,4 +1,4 @@
-import { TodosListProps } from 'models/TodosProp'
+import { ListName, TodosListProps } from 'models/TodosProp'
 import classnames, {
   backgroundColor,
   backgroundImage,
@@ -184,14 +184,16 @@ export default function ({
   return (
     <div
       className={
-        list_name.toLowerCase() == 'complete' ? completeTasks : notCompleteTasks
+        list_name.toLowerCase() == ListName.complete
+          ? completeTasks
+          : notCompleteTasks
       }
     >
       <h2 className={listName}>{list_name}</h2>
       <ul className={taskList}>
         {tasks.map((task) => (
           <li
-            key={task.description}
+            key={task.id}
             className={classnames(taskClass, position('relative'), 'group')} // how to add group
           >
             <h4>{task.description}</h4>

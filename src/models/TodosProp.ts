@@ -16,3 +16,8 @@ export type TodosListProps = {
   toggleTodo(todoId: number): void
   removeTodo(todoId: number): void
 }
+
+export const ListName = {
+  todo: 'todo',
+  complete: 'complete',
+}

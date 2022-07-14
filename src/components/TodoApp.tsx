@@ -1,4 +1,4 @@
-import { Todo } from 'models/TodosProp'
+import { ListName, Todo } from 'models/TodosProp'
 import { useSnapshot } from 'valtio'
 import TaskStore from 'stores/TaskStore'
 import TodoList from 'components/TodoList'
@@ -74,7 +74,13 @@ export default function () {
     const text = form.todo.value as string
 
     text &&
-      TaskStore.tasks.push(new Todo(TaskStore.tasks.length + 1, text, false))
+      TaskStore.tasks.push(
+        new Todo(
+          Math.max(...TaskStore.tasks.map((task) => task.id)) + 1,
+          text,
+          false
+        )
+      )
 
     form.reset()
   }
@@ -99,13 +105,13 @@ export default function () {
         <input className={taskInputContainer} type="text" id="todo" />
       </form>
       <TodoList
-        list_name="todo"
+        list_name={ListName.todo}
         tasks={tasks ? tasks.filter((task) => !task.done) : []}
         toggleTodo={toggleTodo}
         removeTodo={removeTodo}
       />
       <TodoList
-        list_name="complete"
+        list_name={ListName.complete}
         tasks={tasks ? tasks.filter((task) => task.done) : []}
         toggleTodo={toggleTodo}
         removeTodo={removeTodo}
